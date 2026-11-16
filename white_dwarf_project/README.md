@@ -28,7 +28,11 @@ At 60° (big for a clear effect but not too extreme) mutual inclination (the ang
 
 Then add the brown dwarf **during the star's AGB window** (This is both to use a smaller stellar lifetime and to use the, I think, most consequential part of its lifetime). The inner and outer orbits start at **5 and 100 au** at the start of this window. With the stellar track held fixed, the numerical checks pass. The minimum sampled clearance, `q − (Rstar + Rplanet)`, is about **0.907 au**: positive means no geometric contact at that sample. However, using stellar refinements 64 and 128 changes the pericentre by up to **0.01025 au**, above our 0.001-au target. So I note it down as `needs_review` and investigate the stellar input while adding tides next.
 
-**[05 — Tides](notebooks/05_tides.ipynb).** Add tidal friction and bulges to the AGB test case. Gravity and rotation deform the bodies; tidal friction dissipates energy and can exchange angular momentum between their spins and the orbit. Here spin means a body's rotation about its own axis. (Working on this)
+**[05 — Tides](notebooks/05_tides.ipynb).** Add tidal friction and bulges to the AGB test from 04. In SecularMultiple we can switch friction on separately in the star and planet. On both fine stellar tracks, the planet stayed clear of the giant, with a minimum sampled clearance of about **0.91 au**. The two tracks start contracting towards the white dwarf at slightly different ages, so the spin through that transition still needs checking.
+
+**[06 — Full history](notebooks/06_full_history.ipynb).** What if the planet was there before the star became a giant? We start it at **1 au** at stellar age zero and compare the same system with and without a brown dwarf at **20 au**. In both cases the planet reaches the star before the AGB. In the finer runs, contact happens **6.51 Myr earlier with the brown dwarf**. The triple’s contact age still shifts by **21–56 kyr** when we change the numerical settings. We still need to try other starting orbits to see where the companion actually changes whether the planet survives.
+
+For the longer runs in notebooks 05 and 06, extract `notebook0506_data.zip` (or whatever I will call it, I will try putting it under `releases`)  at the project root. It puts the inputs under `data/`, alongside `notebooks/`. To compare how the longer runs perform on different PCs, you turn on only `RUN_PC_BENCHMARK` in the notebook you want and choose **Run All**. The 05 case took **2 h 17 min** on my laptop with another case running. For 06, allow **4–5 h**. Run one case at a time and check the `benchmark.json` it produces so we can compare specs, runtime and results. (The benchmark code was mostly chatgpt-ed so Its not 100% verified by me)
 
 
 ## What do these words even mean
@@ -59,6 +63,17 @@ This is a section of explanations on AMUSE and numerical terminology I found con
 | **Common grid / union grid / midpoints** | A grid is a list of times. Common grids compare runs at matching ages; a union includes all selected grids' times. Midpoints lie halfway between neighbours. |
 | **Stellar age / window time / local clock** | Age counts from the stellar run's start; window time from the AGB segment's start. The solver's local clock advances each short interval from zero, keeping total time separately for numerical precision. |
 
+## On the speeding up of code.
+This is what I have found on how we can parallelize/accelerate different amuse solvers in the docs and from tests
 
+| Code | Where we use it | Parallel or GPU  | What to investigate |
+|---|---|---|---|
+| **SecularMultiple** | 03–06 · Orbits and tides | CPU. Independent systems can run in parallel, one worker per process. | **First priority for running many cases.** Two short cases finished **1.59× faster** together. Test whether that holds for the multi-hour runs. | Maybe we can split up the data into many smaller cases to run in parallel?
+| **Huayno** | 03 · Direct gravity check | Optional **OpenCL GPU** and **OpenMP CPU** workers.| **Best GPU candidate.** Our three-body case is below the GPU offload threshold. Test CPU versus GPU with a larger particle system. If this can be massively accelerated we could just move to Huanyo in general if it becomes faster than secularmultiple, though I doubt it. |
+| **SeBa** | 01 · Stellar evolution | CPU. Independent stellar tracks can run in parallel. | **Lower priority.** Run different stellar masses or refinements side by side, though this doesnt take too long anyways |
+
+[1]: https://amuse.readthedocs.io/en/latest/reference/available-codes.html?utm_source=chatgpt.com "Currently supported Community Codes"
+
+# Todos
 TODO: check computation time, if possible check the parameterspace for planet survival w and wo brown dwarf?
 TODO: fix ipynb git changes, only account for source code change and ignore outputs?

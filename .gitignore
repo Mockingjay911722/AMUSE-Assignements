@@ -2,9 +2,11 @@
 
 # Ignore all simulation data
 /white_dwarf_project/data/
+!/white_dwarf_project/data/.gitkeep
+
 
 # Ignore unfinished notebooks
-/white_dwarf_project/notebooks/05_tides.ipynb
+
 
 # Python cache
 __pycache__/
@@ -25,3 +27,4 @@ Thumbs.db
 white_dwarf_project/notebooks/binev.data 
 /white_dwarf_project/notebooks/binev.data
 /white_dwarf_project/notebooks/SeBa.data
+
