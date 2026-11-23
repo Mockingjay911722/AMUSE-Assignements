@@ -1,8 +1,7 @@
 */Snapshots/
 
 # Ignore all simulation data
-/white_dwarf_project/data/
-!/white_dwarf_project/data/.gitkeep
+
 
 
 # Ignore unfinished notebooks

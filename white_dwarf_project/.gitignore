@@ -4,6 +4,7 @@
 # Generated outputs
 /data/*
 !/data/.gitkeep
+!/data/planet_survival_results.csv
 
 # Generated figures
 /figures/*
