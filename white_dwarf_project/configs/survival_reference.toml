@@ -8,8 +8,7 @@ wd_step_yr = 0.5
 wd_after_yr = 100.0
 max_age_Myr = 14000.0
 
-# The 1-au reference sets the common initial physical spins and the maximum
-# spacing of the orbital coupling grid. Planet and brown dwarf masses are fixed.
+# The 1-au reference sets the common initial physical spins and the maximum spacing of the orbital coupling grid. Planet and brown dwarf masses are fixed.
 [orbit]
 m_planet_MSun = 5.7051967902178065e-06
 m_bd_MSun = 0.025775244856505036
