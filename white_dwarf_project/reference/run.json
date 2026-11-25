@@ -1,0 +1,62 @@
+{
+  "status": "completed",
+  "inputs": {
+    "schema": "full_history_v1",
+    "cfg": {
+      "m_planet_MSun": 5.7051967902178065e-06,
+      "m_bd_MSun": 0.025775244856505036,
+      "a_in_AU": 1.0,
+      "a_out_AU": 20.0,
+      "e_in": 0.001,
+      "e_out": 0.001,
+      "mutual_inclination_deg": 60.0,
+      "outer_inclination_deg": 5.0,
+      "r_planet_AU": 5.1105005470241264e-05,
+      "r_bd_AU": 0.00046491303438174014,
+      "k_star": 0.014,
+      "k_planet": 0.3,
+      "kappa_star": 0.08,
+      "kappa_planet": 0.25,
+      "tV_star_yr": 1.0,
+      "tV_planet_yr": 1.0,
+      "spin_star_over_n": 0.1,
+      "spin_planet_over_n": 1.0,
+      "tides": true,
+      "tidal_bulges": true,
+      "rotation_bulges": true
+    },
+    "physics": {
+      "companion": true,
+      "GR": true,
+      "octupole": true,
+      "wind_spin": true
+    },
+    "rtol": 1e-14,
+    "atol": 1e-16,
+    "worker_options": {
+      "channel_type": "sockets"
+    },
+    "limits": {
+      "adiabatic_ratio": 0.1,
+      "spin_breakup_fraction": 0.1,
+      "double_averaging_ratio": 0.01,
+      "mass_transfer_relative": 1e-09,
+      "radius_transfer_relative": 1e-08,
+      "radius_transfer_absolute_AU": 1e-11,
+      "roche_enabled": true,
+      "roche_stop": false,
+      "roche_coefficient": 2.44,
+      "checkpoint_seconds": 60.0,
+      "progress_seconds": 30.0
+    },
+    "environment": {
+      "amuse-framework": "2026.3.0",
+      "amuse-secularmultiple": "2026.3.0",
+      "numpy": "2.5.3"
+    },
+    "planned_outputs": 3914399
+  },
+  "n_states": 1828043,
+  "outcome": "surface_contact",
+  "wall_seconds": 15695.143131918005
+}

@@ -1,0 +1,187 @@
+# Times in years unless the key specifies Myr. Angles in degrees.
+[stellar]
+initial_mass_MSun = 1.2
+metallicity = 0.02
+pre_agb_refinement = 128
+agb_refinement = 2048
+wd_step_yr = 0.5
+wd_after_yr = 100.0
+max_age_Myr = 14000.0
+
+# The 1-au reference sets the common initial physical spins and the maximum spacing of the orbital coupling grid. Planet and brown dwarf masses are fixed.
+[orbit]
+m_planet_MSun = 5.7051967902178065e-06
+m_bd_MSun = 0.025775244856505036
+a_in_AU = 1.0
+a_out_AU = 20.0
+e_in = 0.001
+e_out = 0.001
+mutual_inclination_deg = 60.0
+outer_inclination_deg = 5.0
+r_planet_AU = 5.1105005470241264e-05
+r_bd_AU = 0.00046491303438174014
+k_star = 0.014
+k_planet = 0.3
+kappa_star = 0.08
+kappa_planet = 0.25
+tV_star_yr = 1.0
+tV_planet_yr = 1.0
+spin_star_over_n = 0.1
+spin_planet_over_n = 1.0
+tides = true
+tidal_bulges = true
+rotation_bulges = true
+
+[physics]
+GR = true
+octupole = true
+wind_spin = true
+
+[solver]
+rtol = 1e-14
+atol = 1e-16
+channel = "sockets"
+tight_factor = 10.0
+max_mass_fraction = 0.002
+max_radius_fraction = 0.01
+
+[limits]
+adiabatic_ratio = 0.1
+spin_breakup_fraction = 0.1
+double_averaging_ratio = 0.01
+mass_transfer_relative = 1e-9
+radius_transfer_relative = 1e-8
+radius_transfer_absolute_AU = 1e-11
+roche_enabled = true
+roche_stop = false
+roche_coefficient = 2.44
+checkpoint_seconds = 60.0
+progress_seconds = 30.0
+
+# Each group takes the Cartesian product of the listed values. isolated = true
+# adds one companion-off control per matching set of initial conditions.
+# 'levels' applies to every case in the suite. 'refine' adds selected levels.
+# Baseline groups inherit orbit.tides. A named tidal mode or an explicit
+# tV_star_yr sets friction for that group, even when orbit.tides is changed.
+[suites.survey]
+history_stride = 8
+levels = ["n1", "n2"]
+
+[[suites.survey.groups]]
+a_in_AU = [0.8, 1.0, 1.2, 1.5, 2.0, 2.5, 3.5, 5.0]
+inclinations_deg = [0, 30, 45, 60, 70, 80, 90, 120]
+isolated = true
+
+[suites.kmt]
+history_stride = 8
+levels = ["n1"]
+
+[[suites.kmt.groups]]
+a_in_AU = [1.0, 1.2, 1.5]
+isolated = true
+tides = ["weak_star", "friction_off"]
+
+[[suites.kmt.groups]]
+a_in_AU = [1.0, 1.2]
+a_out_AU = [15.0, 20.0]
+inclinations_deg = [0, 60]
+tides = ["weak_star"]
+
+[[suites.kmt.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0, 60]
+tides = ["baseline"]
+
+[[suites.kmt.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0, 20.0]
+inclinations_deg = [0, 60]
+tides = ["friction_off"]
+
+[suites.kmt-finite]
+history_stride = 8
+levels = ["n1"]
+
+[[suites.kmt-finite.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0, 60]
+tV_star_yr = [30.0, 100.0]
+
+# Replay the branches that produced data. The 60-degree 1000 yr case and
+# the two 3000 yr candidates were pending and are absent from this schedule.
+[suites.kmt-adaptive]
+history_stride = 8
+levels = ["n1"]
+[suites.kmt-adaptive.refine]
+n2 = ["a1_i0_outer15_planet_tides_only", "a1_i0_outer15_star_tv300", "a1_i60_outer15_star_tv300"]
+n2_tight = ["a1_i0_outer15_planet_tides_only", "a1_i0_outer15_star_tv300", "a1_i60_outer15_star_tv300"]
+
+[[suites.kmt-adaptive.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0]
+tides = ["planet_tides_only"]
+
+[[suites.kmt-adaptive.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0, 60]
+tV_star_yr = [300.0]
+
+[[suites.kmt-adaptive.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0]
+tV_star_yr = [1000.0]
+
+[suites.kmt-inclinations]
+history_stride = 8
+levels = ["n1"]
+[suites.kmt-inclinations.refine]
+n2 = ["a1_isolated_star_tv300", "a1_i40_outer15_star_tv300", "a1_i50_outer15_star_tv300"]
+n2_tight = ["a1_i40_outer15_star_tv300", "a1_i50_outer15_star_tv300"]
+
+[[suites.kmt-inclinations.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [30, 40, 50]
+isolated = true
+tV_star_yr = [300.0]
+
+[suites.kmt-eccentric]
+history_stride = 16
+levels = ["n1"]
+[suites.kmt-eccentric.refine]
+n2 = ["a1_i40_outer15_e0.3_w0_star_tv300", "a1_i40_outer15_e0.3_w90_star_tv300"]
+
+[[suites.kmt-eccentric.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0, 30, 40, 50]
+e_out = [0.1, 0.3]
+omega_out_deg = [0, 90]
+tV_star_yr = [300.0]
+
+[suites.kmt-envelope]
+history_stride = 16
+levels = ["n1"]
+[suites.kmt-envelope.refine]
+n2 = ["a1_isolated_hurley"]
+
+[[suites.kmt-envelope.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0, 40, 50]
+isolated = true
+omega_out_deg = [0]
+tides = ["hurley"]
+
+[[suites.kmt-envelope.groups]]
+a_in_AU = [1.0]
+a_out_AU = [15.0]
+inclinations_deg = [0, 30, 40, 50]
+e_out = [0.3]
+omega_out_deg = [0]
+tides = ["hurley"]
